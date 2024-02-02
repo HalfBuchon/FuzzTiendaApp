@@ -12,6 +12,8 @@ import com.halfBuchon.mx.FuzzTiendaApp.entities.ArticulosEntity;
 import com.halfBuchon.mx.FuzzTiendaApp.repositories.ArticulosRepository;
 import com.halfBuchon.mx.FuzzTiendaApp.services.ArticulosService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ArticulosServiceImpl implements ArticulosService {
 
@@ -29,6 +31,19 @@ public class ArticulosServiceImpl implements ArticulosService {
 		Optional<ArticulosEntity> respuesta = articulosRepository.findById(idItem);
 		return respuesta;
 	}
+	
+	@Override
+	public List<ArticulosEntity> obtenerItemsPorTipo(Short tipoItem) {
+		List<ArticulosEntity> respuesta = articulosRepository.findByTipoItem(tipoItem);
+		return respuesta;
+	}
+	
+	@Override
+	public List<ArticulosEntity> obtenerItemsPorEstatus(Short estatus) {
+		List<ArticulosEntity> respuesta = articulosRepository.findByEstatus(estatus);
+		return respuesta;
+	}
+
 
 	@Override
 	public void agregarItem(ArticulosDTO articuloDTO) {
@@ -50,9 +65,40 @@ public class ArticulosServiceImpl implements ArticulosService {
 		respuesta.setEstatus(articuloDTO.getEstatus());
 		respuesta.setComentarios(articuloDTO.getComentarios());
 		respuesta.setDescripcionVenta(articuloDTO.getDescripcionVenta());
-
 		articulosRepository.save(respuesta);
-
+	}
+	
+	@Override
+	public void actualizarItem(ArticulosDTO articuloDTO) {
+		Optional<ArticulosEntity> optionalArticulosEntity = articulosRepository.findById(articuloDTO.getIdItem());
+		
+		if(optionalArticulosEntity.isPresent()) {
+			ArticulosEntity respuesta = optionalArticulosEntity.get();
+			
+			respuesta.setIdItem(articuloDTO.getIdItem());
+			respuesta.setNombre(articuloDTO.getNombre());
+			respuesta.setTipoItem(articuloDTO.getTipoItem());
+			respuesta.setColor(articuloDTO.getColor());
+			respuesta.setPrecioCompra(articuloDTO.getPrecioCompra());
+			respuesta.setPrecioVenta(articuloDTO.getPrecioVenta());
+			respuesta.setFechaCompra(articuloDTO.getFechaCompra());
+			respuesta.setFechaVenta(articuloDTO.getFechaVenta());
+			respuesta.setUploadedIg(articuloDTO.getUploadedIg());
+			respuesta.setUploadedFb(articuloDTO.getUploadedFb());
+			respuesta.setUploadedWs(articuloDTO.getUploadedWs());
+			respuesta.setCelVendedor(articuloDTO.getCelVendedor());
+			respuesta.setCostoReparacion(articuloDTO.getCostoReparacion());
+			respuesta.setTimeConsumed(articuloDTO.getTimeConsumed());
+			respuesta.setEstatus(articuloDTO.getEstatus());
+			respuesta.setComentarios(articuloDTO.getComentarios());
+			respuesta.setDescripcionVenta(articuloDTO.getDescripcionVenta());
+			articulosRepository.save(respuesta);
+		}
+	}
+	
+	@Override
+	public void borrarItem(Long idItem) {
+		articulosRepository.deleteById(idItem);
 	}
 
 }

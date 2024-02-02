@@ -15,6 +15,14 @@ public interface ArticulosService {
 	
 	public Optional<ArticulosEntity> obtenerItem(Long iditem);
 	
+	public List<ArticulosEntity> obtenerItemsPorTipo(Short tipoItem);
+	
+	public List<ArticulosEntity> obtenerItemsPorEstatus(Short estatus);
+	
 	public void agregarItem(ArticulosDTO articuloDTO);
+	
+	public void actualizarItem(ArticulosDTO articulosDTO);
+	
+	public void borrarItem(Long idItem);
 
 }
