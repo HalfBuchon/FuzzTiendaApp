@@ -5,14 +5,12 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
+
 
 import com.halfBuchon.mx.FuzzTiendaApp.DTO.ArticulosDTO;
 import com.halfBuchon.mx.FuzzTiendaApp.entities.ArticulosEntity;
 import com.halfBuchon.mx.FuzzTiendaApp.repositories.ArticulosRepository;
 import com.halfBuchon.mx.FuzzTiendaApp.services.ArticulosService;
-
-import jakarta.transaction.Transactional;
 
 @Service
 public class ArticulosServiceImpl implements ArticulosService {
