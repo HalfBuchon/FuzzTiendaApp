@@ -4,11 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
-
 
 import com.halfBuchon.mx.FuzzTiendaApp.DTO.ArticulosDTO;
 import com.halfBuchon.mx.FuzzTiendaApp.entities.ArticulosEntity;
+import com.halfBuchon.mx.FuzzTiendaApp.exceptions.SqlFunctionException;
 import com.halfBuchon.mx.FuzzTiendaApp.repositories.ArticulosRepository;
 import com.halfBuchon.mx.FuzzTiendaApp.services.ArticulosService;
 
@@ -20,28 +21,36 @@ public class ArticulosServiceImpl implements ArticulosService {
 
 	@Override
 	public List<ArticulosEntity> obtenerItems() {
-		List<ArticulosEntity> respuesta = articulosRepository.findAll();
-		return respuesta;
+		try {
+			return articulosRepository.findAll();
+		} catch (DataAccessException e) {
+			throw new SqlFunctionException(e.getMessage());
+		}
 	}
 
 	@Override
 	public Optional<ArticulosEntity> obtenerItem(Long idItem) {
-		Optional<ArticulosEntity> respuesta = articulosRepository.findById(idItem);
-		return respuesta;
+		try {
+			return articulosRepository.findById(idItem);
+		} catch (DataAccessException e) {
+			throw new SqlFunctionException(e.getMessage());
+		}
 	}
-	
+
 	@Override
 	public List<ArticulosEntity> obtenerItemsPorTipo(Short tipoItem) {
 		List<ArticulosEntity> respuesta = articulosRepository.findByTipoItem(tipoItem);
 		return respuesta;
 	}
-	
+
 	@Override
 	public List<ArticulosEntity> obtenerItemsPorEstatus(Short estatus) {
-		List<ArticulosEntity> respuesta = articulosRepository.findByEstatus(estatus);
-		return respuesta;
+		try{
+			return articulosRepository.findByEstatus(estatus);
+		} catch (DataAccessException e){
+			throw new SqlFunctionException(e.getMessage());
+		}
 	}
-
 
 	@Override
 	public void agregarItem(ArticulosDTO articuloDTO) {
@@ -65,14 +74,14 @@ public class ArticulosServiceImpl implements ArticulosService {
 		respuesta.setDescripcionVenta(articuloDTO.getDescripcionVenta());
 		articulosRepository.save(respuesta);
 	}
-	
+
 	@Override
 	public void actualizarItem(ArticulosDTO articuloDTO) {
 		Optional<ArticulosEntity> optionalArticulosEntity = articulosRepository.findById(articuloDTO.getIdItem());
-		
-		if(optionalArticulosEntity.isPresent()) {
+
+		if (optionalArticulosEntity.isPresent()) {
 			ArticulosEntity respuesta = optionalArticulosEntity.get();
-			
+
 			respuesta.setIdItem(articuloDTO.getIdItem());
 			respuesta.setNombre(articuloDTO.getNombre());
 			respuesta.setTipoItem(articuloDTO.getTipoItem());
@@ -93,7 +102,7 @@ public class ArticulosServiceImpl implements ArticulosService {
 			articulosRepository.save(respuesta);
 		}
 	}
-	
+
 	@Override
 	public void borrarItem(Long idItem) {
 		articulosRepository.deleteById(idItem);
